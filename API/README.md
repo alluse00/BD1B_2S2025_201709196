@@ -49,6 +49,12 @@ Modo producción:
 npm start
 ```
 
+5. **Acceder a la API**
+
+- **API REST:** http://localhost:3000/api
+- **Health Check:** http://localhost:3000/health
+- **Probar con Postman, cURL o cualquier cliente HTTP**
+
 ## 📡 Endpoints Disponibles
 
 ### General
@@ -56,14 +62,20 @@ npm start
 - `GET /health` - Estado del servidor
 - `GET /api/test` - Prueba de conexión a la base de datos
 
-### Centros de Evaluación
+### Centros de Evaluación (CRUD Completo)
 - `GET /api/centros` - Obtener todos los centros
 - `GET /api/centros/:id` - Obtener centro por ID
 - `GET /api/centros/:id_centro/dashboard` - Dashboard de estadísticas del centro
+- `POST /api/centros` - Crear un nuevo centro
+- `PUT /api/centros/:id` - Actualizar centro existente
+- `DELETE /api/centros/:id` - Eliminar centro
 
-### Personas
+### Personas (CRUD Completo)
 - `GET /api/personas` - Obtener todas las personas
 - `GET /api/personas/buscar/:identificacion` - Buscar persona por DPI/identificación
+- `POST /api/personas` - Crear una nueva persona
+- `PUT /api/personas/:id` - Actualizar persona existente
+- `DELETE /api/personas/:id` - Eliminar persona
 
 ### Evaluaciones
 - `GET /api/evaluaciones` - Obtener todas las evaluaciones
@@ -78,10 +90,45 @@ npm start
 - `GET /api/tipos-licencia` - Tipos de licencia disponibles (M, P, B, A, E)
 - `GET /api/tipos-tramite` - Tipos de trámite (Primera, Cambio, Renovación)
 
+### Departamentos (CRUD Completo)
+- `GET /api/departamentos` - Obtener todos los departamentos
+- `GET /api/departamentos/:id` - Obtener departamento por ID
+- `POST /api/departamentos` - Crear un nuevo departamento
+- `PUT /api/departamentos/:id` - Actualizar departamento existente
+- `DELETE /api/departamentos/:id` - Eliminar departamento
+
+### Municipios (CRUD Completo)
+- `GET /api/municipios` - Obtener todos los municipios
+- `GET /api/municipios/:id` - Obtener municipio por ID
+- `GET /api/departamentos/:id_departamento/municipios` - Obtener municipios de un departamento
+- `POST /api/municipios` - Crear un nuevo municipio
+- `PUT /api/municipios/:id` - Actualizar municipio existente
+- `DELETE /api/municipios/:id` - Eliminar municipio
+
 ### Preguntas
 - `GET /api/preguntas/teoricas` - Obtener preguntas teóricas
   - Parámetros query: `id_tipo_licencia`, `estado`
 - `GET /api/preguntas/teoricas/:id` - Obtener pregunta con sus respuestas
+
+---
+
+## � Documentación Completa
+
+### Guías de Uso con Postman:
+- **[POSTMAN_QUICK_START.md](./POSTMAN_QUICK_START.md)** - ⭐ Guía rápida con ejemplos prácticos y troubleshooting
+- **[POSTMAN_CRUD_GUIDE.md](./POSTMAN_CRUD_GUIDE.md)** - Guía completa de todos los endpoints CRUD con ejemplos
+- **[CRUD_GUIDE.md](./CRUD_GUIDE.md)** - Documentación detallada de operaciones CRUD
+- **[CRUD_IMPLEMENTATION_PLAN.md](./CRUD_IMPLEMENTATION_PLAN.md)** - Plan de implementación de las 17 tablas
+
+### Estado de Implementación:
+✅ **CRUD Completo (21 endpoints):**
+- Departamentos (5 endpoints)
+- Municipios (6 endpoints)
+- Centros de Evaluación (5 endpoints)
+- Personas (5 endpoints)
+
+🔄 **Pendientes:**
+- 13 tablas restantes (~65 endpoints adicionales)
 
 ## 🗄️ Estructura de la Base de Datos
 

@@ -14,7 +14,9 @@ async function executeQuery(query, params = []) {
 
   try {
     connection = await oracledb.getConnection(dbConfig);
-    const result = await connection.execute(query, params);
+    const result = await connection.execute(query, params, {
+      outFormat: oracledb.OUT_FORMAT_OBJECT  // Devolver resultados como objetos con nombres de columnas
+    });
     return result;
   } catch (error) {
     console.error('Error executing query:', error);
