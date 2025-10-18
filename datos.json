@@ -1,0 +1,325 @@
+{
+    "DEPARTAMENTO": [
+        {
+            "nombre": "Guatemala",
+            "codigo": "01"
+        },
+        {
+            "nombre": "Sacatepéquez",
+            "codigo": "03"
+        },
+        {
+            "nombre": "Escuintla",
+            "codigo": "05"
+        }
+    ],
+    "MUNICIPIO": [
+        {
+            "nombre": "Guatemala",
+            "codigo": "01",
+            "departamento_id_departamento": 1
+        },
+        {
+            "nombre": "Mixco",
+            "codigo": "02",
+            "departamento_id_departamento": 1
+        },
+        {
+            "nombre": "Villa Nueva",
+            "codigo": "03",
+            "departamento_id_departamento": 1
+        },
+        {
+            "nombre": "Escuintla",
+            "codigo": "01",
+            "departamento_id_departamento": 3
+        },
+        {
+            "nombre": "Antigua Guatemala",
+            "codigo": "01",
+            "departamento_id_departamento": 2
+        }
+    ],
+    "CENTRO": [
+        {
+            "nombre": "Centro de Evaluación Zona 12"
+        },
+        {
+            "nombre": "Centro de Evaluación Antigua Guatemala"
+        },
+        {
+            "nombre": "Centro de Evaluación Escuintla"
+        }
+    ],
+    "ESCUELA": [
+        {
+            "nombre": "Escuela de Manejo AutoMaster",
+            "direccion": "Avenida Reforma 15-45, Zona 10",
+            "acuerdo": "ESC-AM-001"
+        },
+        {
+            "nombre": "Academia Vial GuateDrive",
+            "direccion": "Boulevard Los Próceres 18-20, Zona 10",
+            "acuerdo": "ESC-GD-002"
+        },
+        {
+            "nombre": "Instituto de Conducción Segura",
+            "direccion": "Calzada Roosevelt 25-30, Zona 11",
+            "acuerdo": "ESC-ICS-003"
+        }
+    ],
+    "UBICACION": [
+        {
+            "escuela_id_escuela": 1,
+            "centro_id_centro": 1
+        },
+        {
+            "escuela_id_escuela": 1,
+            "centro_id_centro": 2
+        },
+        {
+            "escuela_id_escuela": 2,
+            "centro_id_centro": 1
+        },
+        {
+            "escuela_id_escuela": 3,
+            "centro_id_centro": 2
+        },
+        {
+            "escuela_id_escuela": 3,
+            "centro_id_centro": 3
+        }
+    ],
+    "REGISTRO": [
+        {
+            "ubicacion_escuela_id_escuela": 1,
+            "ubicacion_centro_id_centro": 1,
+            "municipio_id_municipio": 1,
+            "municipio_departamento_id_departamento": 1,
+            "fecha": "2025-01-15",
+            "tipo_tramite": "Licencia de Conducir",
+            "tipo_licencia": "A",
+            "nombre_completo": "Juan Carlos López García",
+            "genero": "M"
+        },
+        {
+            "ubicacion_escuela_id_escuela": 1,
+            "ubicacion_centro_id_centro": 2,
+            "municipio_id_municipio": 2,
+            "municipio_departamento_id_departamento": 1,
+            "fecha": "2025-01-15",
+            "tipo_tramite": "Licencia de Conducir",
+            "tipo_licencia": "B",
+            "nombre_completo": "María Elena Rodríguez Morales",
+            "genero": "F"
+        },
+        {
+            "ubicacion_escuela_id_escuela": 2,
+            "ubicacion_centro_id_centro": 1,
+            "municipio_id_municipio": 3,
+            "municipio_departamento_id_departamento": 1,
+            "fecha": "2025-01-16",
+            "tipo_tramite": "Licencia de Conducir",
+            "tipo_licencia": "A",
+            "nombre_completo": "Carlos Alberto Méndez Castillo",
+            "genero": "M"
+        },
+        {
+            "ubicacion_escuela_id_escuela": 3,
+            "ubicacion_centro_id_centro": 3,
+            "municipio_id_municipio": 4,
+            "municipio_departamento_id_departamento": 3,
+            "fecha": "2025-01-17",
+            "tipo_tramite": "Licencia de Conducir",
+            "tipo_licencia": "A",
+            "nombre_completo": "Ana Sofía Guerrero Díaz",
+            "genero": "F"
+        },
+        {
+            "ubicacion_escuela_id_escuela": 2,
+            "ubicacion_centro_id_centro": 2,
+            "municipio_id_municipio": 5,
+            "municipio_departamento_id_departamento": 2,
+            "fecha": "2025-01-18",
+            "tipo_tramite": "Licencia de Conducir",
+            "tipo_licencia": "B",
+            "nombre_completo": "Pedro José Hernández Ruiz",
+            "genero": "M"
+        }
+    ],
+    "CORRELATIVO": [
+        {
+            "fecha": "2025-01-15",
+            "no_examen": 1
+        },
+        {
+            "fecha": "2025-01-15",
+            "no_examen": 2
+        },
+        {
+            "fecha": "2025-01-16",
+            "no_examen": 3
+        },
+        {
+            "fecha": "2025-01-17",
+            "no_examen": 4
+        },
+        {
+            "fecha": "2025-01-18",
+            "no_examen": 5
+        }
+    ],
+    "EXAMEN": [
+        {
+            "registro_id_registro": 1,
+            "correlativo_id_correlativo": 1,
+            "registro_id_escuela": 1,
+            "registro_id_centro": 1,
+            "registro_municipio_id_municipio": 1,
+            "registro_municipio_departamento_id_departamento": 1
+        },
+        {
+            "registro_id_registro": 2,
+            "correlativo_id_correlativo": 2,
+            "registro_id_escuela": 1,
+            "registro_id_centro": 2,
+            "registro_municipio_id_municipio": 2,
+            "registro_municipio_departamento_id_departamento": 1
+        },
+        {
+            "registro_id_registro": 3,
+            "correlativo_id_correlativo": 3,
+            "registro_id_escuela": 2,
+            "registro_id_centro": 1,
+            "registro_municipio_id_municipio": 3,
+            "registro_municipio_departamento_id_departamento": 1
+        },
+        {
+            "registro_id_registro": 4,
+            "correlativo_id_correlativo": 4,
+            "registro_id_escuela": 3,
+            "registro_id_centro": 3,
+            "registro_municipio_id_municipio": 4,
+            "registro_municipio_departamento_id_departamento": 3
+        },
+        {
+            "registro_id_registro": 5,
+            "correlativo_id_correlativo": 5,
+            "registro_id_escuela": 2,
+            "registro_id_centro": 2,
+            "registro_municipio_id_municipio": 5,
+            "registro_municipio_departamento_id_departamento": 2
+        }
+    ],
+    "PREGUNTAS": [
+        {
+            "pregunta_texto": "¿Cuál es la distancia mínima que debe mantener entre vehículos en carretera?",
+            "respuesta_a": "2 metros",
+            "respuesta_b": "3 segundos de distancia",
+            "respuesta_c": "5 metros",
+            "respuesta_d": "1 segundo de distancia",
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta_texto": "¿Qué significa una señal de alto?",
+            "respuesta_a": "Reducir velocidad",
+            "respuesta_b": "Detenerse completamente",
+            "respuesta_c": "Ceder el paso",
+            "respuesta_d": "Continuar con precaución",
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta_texto": "¿Cuál es el límite de velocidad en zona escolar?",
+            "respuesta_a": "20 km/h",
+            "respuesta_b": "30 km/h",
+            "respuesta_c": "40 km/h",
+            "respuesta_d": "50 km/h",
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta_texto": "¿Qué debe hacer al ver una ambulancia con sirena activada?",
+            "respuesta_a": "Mantener velocidad",
+            "respuesta_b": "Acelerar para salir del camino",
+            "respuesta_c": "Orillarse y detenerse",
+            "respuesta_d": "Ignorar la sirena",
+            "respuesta_correcta": "C"
+        }
+    ],
+    "PREGUNTAS_PRACTICO": [
+        {
+            "pregunta_texto": "Realizar estacionamiento en paralelo en un espacio de 6 metros",
+            "punteo": 20
+        },
+        {
+            "pregunta_texto": "Conducir en reversa por 50 metros manteniendo trayectoria recta",
+            "punteo": 15
+        },
+        {
+            "pregunta_texto": "Maniobra de tres puntos en espacio reducido",
+            "punteo": 25
+        },
+        {
+            "pregunta_texto": "Conducción en zona urbana respetando señales de tránsito",
+            "punteo": 30
+        }
+    ],
+    "RESPUESTA_USUARIO": [
+        {
+            "pregunta_id_pregunta": 1,
+            "examen_id_examen": 1,
+            "respuesta": "B"
+        },
+        {
+            "pregunta_id_pregunta": 2,
+            "examen_id_examen": 1,
+            "respuesta": "B"
+        },
+        {
+            "pregunta_id_pregunta": 3,
+            "examen_id_examen": 2,
+            "respuesta": "A"
+        },
+        {
+            "pregunta_id_pregunta": 4,
+            "examen_id_examen": 2,
+            "respuesta": "C"
+        },
+        {
+            "pregunta_id_pregunta": 1,
+            "examen_id_examen": 3,
+            "respuesta": "B"
+        },
+        {
+            "pregunta_id_pregunta": 2,
+            "examen_id_examen": 3,
+            "respuesta": "A"
+        }
+    ],
+    "RESPUESTA_PRACTICO_USUARIO": [
+        {
+            "pregunta_practico_id_pregunta_practico": 1,
+            "examen_id_examen": 1,
+            "nota": 18
+        },
+        {
+            "pregunta_practico_id_pregunta_practico": 2,
+            "examen_id_examen": 1,
+            "nota": 13
+        },
+        {
+            "pregunta_practico_id_pregunta_practico": 3,
+            "examen_id_examen": 2,
+            "nota": 22
+        },
+        {
+            "pregunta_practico_id_pregunta_practico": 4,
+            "examen_id_examen": 2,
+            "nota": 28
+        },
+        {
+            "pregunta_practico_id_pregunta_practico": 1,
+            "examen_id_examen": 3,
+            "nota": 15
+        }
+    ]
+}

@@ -28,29 +28,45 @@ app.use((req, res, next) => {
 });
 
 // Importar rutas
-const evaluacionRoutes = require('./routes/evaluacion.routes');
+const consultasRoutes = require('./routes/consultas.routes');
+const mainRoutes = require('./routes/main.routes');
 
 // Usar rutas
-app.use('/api', evaluacionRoutes);
+app.use('/api', consultasRoutes);
+app.use('/api', mainRoutes);
 
 // Ruta de prueba básica
 app.get('/', (req, res) => {
   res.json({
     message: 'API de Sistema de Control de Evaluaciones de Centros de Manejo',
-    version: '1.0.0',
+    version: '2.0.0',
     status: 'Activo',
     proyecto: 'Proyecto Fase 2 - BD1',
     carnet: '201709196',
+    descripcion: 'Sistema compatible con datos.json - Estructura simplificada',
     endpoints: {
       test: '/api/test',
       health: '/health',
-      centros: '/api/centros',
-      personas: '/api/personas',
-      evaluaciones: '/api/evaluaciones',
-      estadisticas: '/api/estadisticas/diarias',
-      tiposLicencia: '/api/tipos-licencia',
-      tiposTramite: '/api/tipos-tramite',
-      preguntasTeorica: '/api/preguntas/teoricas'
+      consultas: {
+        estadisticasCentroEscuela: '/api/estadisticas/centro-escuela',
+        rankingEvaluados: '/api/estadisticas/ranking-evaluados',
+        preguntasDificiles: '/api/estadisticas/preguntas-dificiles'
+      },
+      crud: {
+        departamentos: '/api/departamentos',
+        municipios: '/api/municipios',
+        centros: '/api/centros',
+        escuelas: '/api/escuelas',
+        ubicaciones: '/api/ubicaciones',
+        preguntas: '/api/preguntas',
+        preguntasPractico: '/api/preguntas-practico'
+      }
+    },
+    documentacion: {
+      consulta1: 'Estadísticas de aprobación por centro y escuela',
+      consulta2: 'Ranking de evaluados ordenados por resultado y puntaje',
+      consulta3: 'Preguntas con menor porcentaje de aciertos',
+      crud: 'Endpoints CRUD disponibles para todas las tablas (GET, POST, PUT, DELETE)'
     }
   });
 });
@@ -105,21 +121,21 @@ app.use((error, req, res, next) => {
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log('===========================================');
-  console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
-  console.log(`📍 URL: http://localhost:${PORT}`);
-  console.log(`🗄️  Base de datos: Oracle XE`);
-  console.log(`🔌 Connection: ${process.env.DB_CONNECTION_STRING}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`URL: http://localhost:${PORT}`);
+  console.log(`Base de datos: Oracle XE`);
+  console.log(`Connection: ${process.env.DB_CONNECTION_STRING}`);
   console.log('===========================================');
 });
 
 // Manejo de cierre graceful
 process.on('SIGINT', () => {
-  console.log('\n⚠️  Cerrando servidor...');
+  console.log('\n  Cerrando servidor...');
   process.exit(0);
 });
 
 process.on('SIGTERM', () => {
-  console.log('\n⚠️  Cerrando servidor...');
+  console.log('\n  Cerrando servidor...');
   process.exit(0);
 });
 

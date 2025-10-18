@@ -1,0 +1,970 @@
+{
+	"info": {
+		"_postman_id": "bd1-201709196-collection",
+		"name": "BDD1 - Sistema Evaluaciones de Manejo - 201709196",
+		"description": "Colección completa de endpoints para el Sistema de Control de Evaluaciones de Centros de Manejo.\n\n**Proyecto Fase 2 - Bases de Datos 1**\n**Carnet:** 201709196\n**Base de datos:** Oracle XE 18.4.0\n\nIncluye:\n- 3 Consultas/Estadísticas\n- 7 Recursos CRUD (Departamentos, Municipios, Centros, Escuelas, Ubicaciones, Preguntas Teóricas, Preguntas Prácticas)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Consultas y Estadísticas",
+			"item": [
+				{
+					"name": "Estadísticas Centro-Escuela",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/estadisticas/centro-escuela",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"estadisticas",
+								"centro-escuela"
+							]
+						},
+						"description": "**CONSULTA 1:** Obtiene estadísticas de evaluaciones por centro y escuela.\n\nRetorna:\n- Nombre del centro\n- Nombre de la escuela\n- Cantidad de evaluados\n- Total de aprobados\n- Total de reprobados\n- Porcentaje de aprobación"
+					},
+					"response": []
+				},
+				{
+					"name": "Ranking de Evaluados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/estadisticas/ranking-evaluados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"estadisticas",
+								"ranking-evaluados"
+							]
+						},
+						"description": "**CONSULTA 2:** Obtiene el ranking de evaluados con sus punteos.\n\nRetorna:\n- DPI del evaluado\n- Nombre completo\n- Punteo teórico\n- Punteo práctico\n- Punteo total\n- Estado (Aprobado/Reprobado)\n- Nombre de la escuela"
+					},
+					"response": []
+				},
+				{
+					"name": "Preguntas Difíciles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/estadisticas/preguntas-dificiles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"estadisticas",
+								"preguntas-dificiles"
+							]
+						},
+						"description": "**CONSULTA 3:** Obtiene las preguntas con menor porcentaje de aciertos.\n\nRetorna:\n- ID de la pregunta\n- Texto de la pregunta\n- Respuesta correcta\n- Total de veces respondida\n- Total de respuestas correctas\n- Porcentaje de aciertos"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de consultas SQL complejas y estadísticas del sistema."
+		},
+		{
+			"name": "CRUD - Departamentos",
+			"item": [
+				{
+					"name": "Listar Todos los Departamentos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/departamentos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"departamentos"
+							]
+						},
+						"description": "Obtiene la lista completa de departamentos de Guatemala."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Departamento por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/departamentos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"departamentos",
+								"1"
+							]
+						},
+						"description": "Obtiene un departamento específico por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Departamento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Alta Verapaz\",\n    \"codigo\": \"16\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/departamentos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"departamentos"
+							]
+						},
+						"description": "Crea un nuevo departamento.\n\n**Campos requeridos:**\n- nombre (string)\n- codigo (string, único)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Departamento",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Alta Verapaz (AV)\",\n    \"codigo\": \"16\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/departamentos/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"departamentos",
+								"4"
+							]
+						},
+						"description": "Actualiza un departamento existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Departamento",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/departamentos/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"departamentos",
+								"4"
+							]
+						},
+						"description": "Elimina un departamento por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla DEPARTAMENTO."
+		},
+		{
+			"name": "CRUD - Municipios",
+			"item": [
+				{
+					"name": "Listar Todos los Municipios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/municipios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"municipios"
+							]
+						},
+						"description": "Obtiene la lista completa de municipios con información del departamento."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Municipio por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/municipios/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"municipios",
+								"1"
+							]
+						},
+						"description": "Obtiene un municipio específico por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Municipios por Departamento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/departamentos/1/municipios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"departamentos",
+								"1",
+								"municipios"
+							]
+						},
+						"description": "Obtiene todos los municipios de un departamento específico."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Municipio",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Amatitlán\",\n    \"codigo\": \"06\",\n    \"departamento_id_departamento\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/municipios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"municipios"
+							]
+						},
+						"description": "Crea un nuevo municipio.\n\n**Campos requeridos:**\n- nombre (string)\n- codigo (string)\n- departamento_id_departamento (number, FK válida)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Municipio",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Amatitlán\",\n    \"codigo\": \"06\",\n    \"departamento_id_departamento\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/municipios/6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"municipios",
+								"6"
+							]
+						},
+						"description": "Actualiza un municipio existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Municipio",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/municipios/6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"municipios",
+								"6"
+							]
+						},
+						"description": "Elimina un municipio por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla MUNICIPIO."
+		},
+		{
+			"name": "CRUD - Centros",
+			"item": [
+				{
+					"name": "Listar Todos los Centros",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/centros",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"centros"
+							]
+						},
+						"description": "Obtiene la lista completa de centros de evaluación."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Centro por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/centros/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"centros",
+								"1"
+							]
+						},
+						"description": "Obtiene un centro específico por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Centro",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Centro de Evaluación Zona 1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/centros",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"centros"
+							]
+						},
+						"description": "Crea un nuevo centro de evaluación.\n\n**Campos requeridos:**\n- nombre (string)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Centro",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Centro de Evaluación Zona 1 (Actualizado)\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/centros/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"centros",
+								"4"
+							]
+						},
+						"description": "Actualiza un centro existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Centro",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/centros/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"centros",
+								"4"
+							]
+						},
+						"description": "Elimina un centro por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla CENTRO."
+		},
+		{
+			"name": "CRUD - Escuelas",
+			"item": [
+				{
+					"name": "Listar Todas las Escuelas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/escuelas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"escuelas"
+							]
+						},
+						"description": "Obtiene la lista completa de escuelas de manejo."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Escuela por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/escuelas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"escuelas",
+								"1"
+							]
+						},
+						"description": "Obtiene una escuela específica por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Escuela",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Escuela de Manejo Profesional\",\n    \"direccion\": \"Calzada San Juan 10-20, Zona 7\",\n    \"acuerdo\": \"ESC-EMP-004\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/escuelas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"escuelas"
+							]
+						},
+						"description": "Crea una nueva escuela de manejo.\n\n**Campos requeridos:**\n- nombre (string)\n- direccion (string)\n- acuerdo (string, único)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Escuela",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Escuela de Manejo Profesional (Actualizada)\",\n    \"direccion\": \"Calzada San Juan 10-20, Zona 7\",\n    \"acuerdo\": \"ESC-EMP-004\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/escuelas/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"escuelas",
+								"4"
+							]
+						},
+						"description": "Actualiza una escuela existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Escuela",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/escuelas/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"escuelas",
+								"4"
+							]
+						},
+						"description": "Elimina una escuela por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla ESCUELA."
+		},
+		{
+			"name": "CRUD - Ubicaciones",
+			"item": [
+				{
+					"name": "Listar Todas las Ubicaciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ubicaciones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones"
+							]
+						},
+						"description": "Obtiene todas las relaciones escuela-centro (ubicaciones)."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Ubicación Específica",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ubicaciones/1/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"1",
+								"2"
+							]
+						},
+						"description": "Obtiene una ubicación específica usando la llave compuesta (id_escuela, id_centro)."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Ubicación",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"escuela_id_escuela\": 1,\n    \"centro_id_centro\": 3\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ubicaciones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones"
+							]
+						},
+						"description": "Asigna una escuela a un centro de evaluación.\n\n**Campos requeridos:**\n- escuela_id_escuela (number, FK válida)\n- centro_id_centro (number, FK válida)\n\n**Nota:** La combinación debe ser única."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Ubicación",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ubicaciones/1/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ubicaciones",
+								"1",
+								"3"
+							]
+						},
+						"description": "Elimina una ubicación usando la llave compuesta (id_escuela, id_centro).\n\n**Nota:** No hay endpoint PUT para ubicaciones debido a la llave compuesta."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla UBICACION (relación N:M entre ESCUELA y CENTRO).\n\n**Nota:** No incluye operación UPDATE debido a la naturaleza de llave compuesta."
+		},
+		{
+			"name": "CRUD - Preguntas Teóricas",
+			"item": [
+				{
+					"name": "Listar Todas las Preguntas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/preguntas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas"
+							]
+						},
+						"description": "Obtiene todas las preguntas teóricas con sus 4 opciones y respuesta correcta."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Pregunta por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/preguntas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas",
+								"1"
+							]
+						},
+						"description": "Obtiene una pregunta teórica específica por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Pregunta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pregunta_texto\": \"¿Qué debe hacer ante una luz amarilla en el semáforo?\",\n    \"respuesta_a\": \"Acelerar para pasar\",\n    \"respuesta_b\": \"Detenerse si es seguro hacerlo\",\n    \"respuesta_c\": \"Ignorar la señal\",\n    \"respuesta_d\": \"Tocar el claxon\",\n    \"respuesta_correcta\": \"B\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/preguntas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas"
+							]
+						},
+						"description": "Crea una nueva pregunta teórica.\n\n**Campos requeridos:**\n- pregunta_texto (string)\n- respuesta_a (string)\n- respuesta_b (string)\n- respuesta_c (string)\n- respuesta_d (string)\n- respuesta_correcta (string: 'A', 'B', 'C' o 'D')"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Pregunta",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pregunta_texto\": \"¿Qué debe hacer ante una luz amarilla en el semáforo? (Actualizada)\",\n    \"respuesta_a\": \"Acelerar para pasar\",\n    \"respuesta_b\": \"Detenerse si es seguro hacerlo\",\n    \"respuesta_c\": \"Ignorar la señal\",\n    \"respuesta_d\": \"Tocar el claxon\",\n    \"respuesta_correcta\": \"B\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/preguntas/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas",
+								"5"
+							]
+						},
+						"description": "Actualiza una pregunta teórica existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Pregunta",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/preguntas/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas",
+								"5"
+							]
+						},
+						"description": "Elimina una pregunta teórica por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla PREGUNTAS (preguntas teóricas de opción múltiple)."
+		},
+		{
+			"name": "CRUD - Preguntas Prácticas",
+			"item": [
+				{
+					"name": "Listar Todas las Preguntas Prácticas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/preguntas-practico",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas-practico"
+							]
+						},
+						"description": "Obtiene todas las preguntas prácticas con sus punteos."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Pregunta Práctica por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/preguntas-practico/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas-practico",
+								"1"
+							]
+						},
+						"description": "Obtiene una pregunta práctica específica por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Pregunta Práctica",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pregunta_texto\": \"Conducción en reversa\",\n    \"punteo\": 20\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/preguntas-practico",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas-practico"
+							]
+						},
+						"description": "Crea una nueva pregunta práctica.\n\n**Campos requeridos:**\n- pregunta_texto (string)\n- punteo (number, entre 1 y 100)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Pregunta Práctica",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pregunta_texto\": \"Conducción en reversa (mejorada)\",\n    \"punteo\": 25\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/preguntas-practico/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas-practico",
+								"5"
+							]
+						},
+						"description": "Actualiza una pregunta práctica existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Pregunta Práctica",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/preguntas-practico/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"preguntas-practico",
+								"5"
+							]
+						},
+						"description": "Elimina una pregunta práctica por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla PREGUNTAS_PRACTICO (preguntas de evaluación práctica con punteo)."
+		},
+		{
+			"name": "Endpoints Informativos",
+			"item": [
+				{
+					"name": "Información de la API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							]
+						},
+						"description": "Obtiene información general de la API, versión, endpoints disponibles y estado del servidor."
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Verifica el estado de salud del servidor y conexión a la base de datos."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints informativos y de monitoreo del sistema."
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
