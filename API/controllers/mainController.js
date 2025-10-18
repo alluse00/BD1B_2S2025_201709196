@@ -1155,6 +1155,897 @@ class CrudController {
       });
     }
   }
+
+  // =====================================================================
+  // REGISTRO - CRUD
+  // =====================================================================
+  
+  async getAllRegistros(req, res) {
+    try {
+      const result = await executeQuery(`
+        SELECT R.*, 
+               E.nombre AS escuela_nombre,
+               C.nombre AS centro_nombre,
+               M.nombre AS municipio_nombre,
+               D.nombre AS departamento_nombre
+        FROM REGISTRO R
+        LEFT JOIN ESCUELA E ON R.ubicacion_escuela_id_escuela = E.id_escuela
+        LEFT JOIN CENTRO C ON R.ubicacion_centro_id_centro = C.id_centro
+        LEFT JOIN MUNICIPIO M ON R.municipio_id_municipio = M.id_municipio
+        LEFT JOIN DEPARTAMENTO D ON R.municipio_departamento_id_departamento = D.id_departamento
+        ORDER BY R.fecha DESC, R.nombre_completo
+      `);
+      res.json({
+        success: true,
+        count: result.rows.length,
+        data: result.rows,
+        message: result.rows.length === 0 ? 'No hay registros' : undefined
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'registros');
+    }
+  }
+
+  async getRegistroById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeQuery(
+        `SELECT R.*, 
+                E.nombre AS escuela_nombre,
+                C.nombre AS centro_nombre,
+                M.nombre AS municipio_nombre,
+                D.nombre AS departamento_nombre
+         FROM REGISTRO R
+         LEFT JOIN ESCUELA E ON R.ubicacion_escuela_id_escuela = E.id_escuela
+         LEFT JOIN CENTRO C ON R.ubicacion_centro_id_centro = C.id_centro
+         LEFT JOIN MUNICIPIO M ON R.municipio_id_municipio = M.id_municipio
+         LEFT JOIN DEPARTAMENTO D ON R.municipio_departamento_id_departamento = D.id_departamento
+         WHERE R.id_registro = :id`,
+        [id]
+      );
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Registro no encontrado'
+        });
+      }
+      res.json({
+        success: true,
+        data: result.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'registro');
+    }
+  }
+
+  async createRegistro(req, res) {
+    const { 
+      ubicacion_escuela_id_escuela, 
+      ubicacion_centro_id_centro, 
+      municipio_id_municipio, 
+      municipio_departamento_id_departamento,
+      fecha,
+      tipo_tramite,
+      tipo_licencia,
+      nombre_completo,
+      genero
+    } = req.body;
+    
+    try {
+      if (!ubicacion_escuela_id_escuela || !ubicacion_centro_id_centro || !municipio_id_municipio || 
+          !municipio_departamento_id_departamento || !fecha || !tipo_tramite || !tipo_licencia || 
+          !nombre_completo || !genero) {
+        return res.status(400).json({
+          success: false,
+          message: 'Todos los campos son requeridos'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `INSERT INTO REGISTRO (
+          ubicacion_escuela_id_escuela, ubicacion_centro_id_centro, 
+          municipio_id_municipio, municipio_departamento_id_departamento,
+          fecha, tipo_tramite, tipo_licencia, nombre_completo, genero
+         ) VALUES (:1, :2, :3, :4, TO_DATE(:5, 'YYYY-MM-DD'), :6, :7, :8, :9)`,
+        [ubicacion_escuela_id_escuela, ubicacion_centro_id_centro, municipio_id_municipio, 
+         municipio_departamento_id_departamento, fecha, tipo_tramite, tipo_licencia, nombre_completo, genero]
+      );
+
+      const newRegistro = await executeQuery(
+        `SELECT R.*, 
+                E.nombre AS escuela_nombre,
+                C.nombre AS centro_nombre,
+                M.nombre AS municipio_nombre,
+                D.nombre AS departamento_nombre
+         FROM REGISTRO R
+         LEFT JOIN ESCUELA E ON R.ubicacion_escuela_id_escuela = E.id_escuela
+         LEFT JOIN CENTRO C ON R.ubicacion_centro_id_centro = C.id_centro
+         LEFT JOIN MUNICIPIO M ON R.municipio_id_municipio = M.id_municipio
+         LEFT JOIN DEPARTAMENTO D ON R.municipio_departamento_id_departamento = D.id_departamento
+         WHERE R.nombre_completo = :nombre_completo AND R.fecha = TO_DATE(:fecha, 'YYYY-MM-DD')
+         ORDER BY R.id_registro DESC`,
+        [nombre_completo, fecha]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Registro creado exitosamente',
+        data: newRegistro.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'registro');
+    }
+  }
+
+  async updateRegistro(req, res) {
+    const { id } = req.params;
+    const { 
+      ubicacion_escuela_id_escuela, 
+      ubicacion_centro_id_centro, 
+      municipio_id_municipio, 
+      municipio_departamento_id_departamento,
+      fecha,
+      tipo_tramite,
+      tipo_licencia,
+      nombre_completo,
+      genero
+    } = req.body;
+    
+    try {
+      if (!ubicacion_escuela_id_escuela || !ubicacion_centro_id_centro || !municipio_id_municipio || 
+          !municipio_departamento_id_departamento || !fecha || !tipo_tramite || !tipo_licencia || 
+          !nombre_completo || !genero) {
+        return res.status(400).json({
+          success: false,
+          message: 'Todos los campos son requeridos'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `UPDATE REGISTRO SET 
+          ubicacion_escuela_id_escuela = :1, 
+          ubicacion_centro_id_centro = :2, 
+          municipio_id_municipio = :3, 
+          municipio_departamento_id_departamento = :4,
+          fecha = TO_DATE(:5, 'YYYY-MM-DD'), 
+          tipo_tramite = :6, 
+          tipo_licencia = :7, 
+          nombre_completo = :8, 
+          genero = :9
+         WHERE id_registro = :10`,
+        [ubicacion_escuela_id_escuela, ubicacion_centro_id_centro, municipio_id_municipio, 
+         municipio_departamento_id_departamento, fecha, tipo_tramite, tipo_licencia, 
+         nombre_completo, genero, id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Registro no encontrado'
+        });
+      }
+
+      const updated = await executeQuery(
+        `SELECT R.*, 
+                E.nombre AS escuela_nombre,
+                C.nombre AS centro_nombre,
+                M.nombre AS municipio_nombre,
+                D.nombre AS departamento_nombre
+         FROM REGISTRO R
+         LEFT JOIN ESCUELA E ON R.ubicacion_escuela_id_escuela = E.id_escuela
+         LEFT JOIN CENTRO C ON R.ubicacion_centro_id_centro = C.id_centro
+         LEFT JOIN MUNICIPIO M ON R.municipio_id_municipio = M.id_municipio
+         LEFT JOIN DEPARTAMENTO D ON R.municipio_departamento_id_departamento = D.id_departamento
+         WHERE R.id_registro = :id`,
+        [id]
+      );
+
+      res.json({
+        success: true,
+        message: 'Registro actualizado exitosamente',
+        data: updated.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'registro');
+    }
+  }
+
+  async deleteRegistro(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeNonQuery(
+        `DELETE FROM REGISTRO WHERE id_registro = :id`,
+        [id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Registro no encontrado'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Registro eliminado exitosamente'
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'registro');
+    }
+  }
+
+  // =====================================================================
+  // CORRELATIVO - CRUD
+  // =====================================================================
+  
+  async getAllCorrelativos(req, res) {
+    try {
+      const result = await executeQuery(`
+        SELECT * FROM CORRELATIVO ORDER BY fecha DESC, no_examen DESC
+      `);
+      res.json({
+        success: true,
+        count: result.rows.length,
+        data: result.rows,
+        message: result.rows.length === 0 ? 'No hay correlativos' : undefined
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'correlativos');
+    }
+  }
+
+  async getCorrelativoById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeQuery(
+        `SELECT * FROM CORRELATIVO WHERE id_correlativo = :id`,
+        [id]
+      );
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Correlativo no encontrado'
+        });
+      }
+      res.json({
+        success: true,
+        data: result.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'correlativo');
+    }
+  }
+
+  async createCorrelativo(req, res) {
+    const { fecha, no_examen } = req.body;
+    
+    try {
+      if (!fecha || !no_examen) {
+        return res.status(400).json({
+          success: false,
+          message: 'Fecha y número de examen son requeridos'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `INSERT INTO CORRELATIVO (fecha, no_examen) 
+         VALUES (TO_DATE(:fecha, 'YYYY-MM-DD'), :no_examen)`,
+        [fecha, no_examen]
+      );
+
+      const newCorrelativo = await executeQuery(
+        `SELECT * FROM CORRELATIVO 
+         WHERE fecha = TO_DATE(:fecha, 'YYYY-MM-DD') AND no_examen = :no_examen
+         ORDER BY id_correlativo DESC`,
+        [fecha, no_examen]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Correlativo creado exitosamente',
+        data: newCorrelativo.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'correlativo');
+    }
+  }
+
+  async updateCorrelativo(req, res) {
+    const { id } = req.params;
+    const { fecha, no_examen } = req.body;
+    
+    try {
+      if (!fecha || !no_examen) {
+        return res.status(400).json({
+          success: false,
+          message: 'Fecha y número de examen son requeridos'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `UPDATE CORRELATIVO SET fecha = TO_DATE(:fecha, 'YYYY-MM-DD'), no_examen = :no_examen 
+         WHERE id_correlativo = :id`,
+        [fecha, no_examen, id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Correlativo no encontrado'
+        });
+      }
+
+      const updated = await executeQuery(
+        `SELECT * FROM CORRELATIVO WHERE id_correlativo = :id`,
+        [id]
+      );
+
+      res.json({
+        success: true,
+        message: 'Correlativo actualizado exitosamente',
+        data: updated.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'correlativo');
+    }
+  }
+
+  async deleteCorrelativo(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeNonQuery(
+        `DELETE FROM CORRELATIVO WHERE id_correlativo = :id`,
+        [id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Correlativo no encontrado'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Correlativo eliminado exitosamente'
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'correlativo');
+    }
+  }
+
+  // =====================================================================
+  // EXAMEN - CRUD
+  // =====================================================================
+  
+  async getAllExamenes(req, res) {
+    try {
+      const result = await executeQuery(`
+        SELECT E.*, 
+               R.nombre_completo AS evaluado_nombre,
+               C.fecha AS fecha_examen,
+               C.no_examen
+        FROM EXAMEN E
+        LEFT JOIN REGISTRO R ON E.registro_id_registro = R.id_registro
+        LEFT JOIN CORRELATIVO C ON E.correlativo_id_correlativo = C.id_correlativo
+        ORDER BY E.id_examen DESC
+      `);
+      res.json({
+        success: true,
+        count: result.rows.length,
+        data: result.rows,
+        message: result.rows.length === 0 ? 'No hay exámenes' : undefined
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'exámenes');
+    }
+  }
+
+  async getExamenById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeQuery(
+        `SELECT E.*, 
+                R.nombre_completo AS evaluado_nombre,
+                C.fecha AS fecha_examen,
+                C.no_examen
+         FROM EXAMEN E
+         LEFT JOIN REGISTRO R ON E.registro_id_registro = R.id_registro
+         LEFT JOIN CORRELATIVO C ON E.correlativo_id_correlativo = C.id_correlativo
+         WHERE E.id_examen = :id`,
+        [id]
+      );
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Examen no encontrado'
+        });
+      }
+      res.json({
+        success: true,
+        data: result.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'examen');
+    }
+  }
+
+  async createExamen(req, res) {
+    const { 
+      registro_id_registro, 
+      correlativo_id_correlativo, 
+      registro_id_escuela, 
+      registro_id_centro,
+      registro_municipio_id_municipio,
+      registro_municipio_departamento_id_departamento
+    } = req.body;
+    
+    try {
+      if (!registro_id_registro || !correlativo_id_correlativo || !registro_id_escuela || 
+          !registro_id_centro || !registro_municipio_id_municipio || 
+          !registro_municipio_departamento_id_departamento) {
+        return res.status(400).json({
+          success: false,
+          message: 'Todos los campos son requeridos'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `INSERT INTO EXAMEN (
+          registro_id_registro, correlativo_id_correlativo, registro_id_escuela, 
+          registro_id_centro, registro_municipio_id_municipio, 
+          registro_municipio_departamento_id_departamento
+         ) VALUES (:1, :2, :3, :4, :5, :6)`,
+        [registro_id_registro, correlativo_id_correlativo, registro_id_escuela, 
+         registro_id_centro, registro_municipio_id_municipio, 
+         registro_municipio_departamento_id_departamento]
+      );
+
+      const newExamen = await executeQuery(
+        `SELECT E.*, 
+                R.nombre_completo AS evaluado_nombre,
+                C.fecha AS fecha_examen,
+                C.no_examen
+         FROM EXAMEN E
+         LEFT JOIN REGISTRO R ON E.registro_id_registro = R.id_registro
+         LEFT JOIN CORRELATIVO C ON E.correlativo_id_correlativo = C.id_correlativo
+         WHERE E.registro_id_registro = :registro_id_registro 
+           AND E.correlativo_id_correlativo = :correlativo_id_correlativo
+         ORDER BY E.id_examen DESC`,
+        [registro_id_registro, correlativo_id_correlativo]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Examen creado exitosamente',
+        data: newExamen.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'examen');
+    }
+  }
+
+  async updateExamen(req, res) {
+    const { id } = req.params;
+    const { 
+      registro_id_registro, 
+      correlativo_id_correlativo, 
+      registro_id_escuela, 
+      registro_id_centro,
+      registro_municipio_id_municipio,
+      registro_municipio_departamento_id_departamento
+    } = req.body;
+    
+    try {
+      if (!registro_id_registro || !correlativo_id_correlativo || !registro_id_escuela || 
+          !registro_id_centro || !registro_municipio_id_municipio || 
+          !registro_municipio_departamento_id_departamento) {
+        return res.status(400).json({
+          success: false,
+          message: 'Todos los campos son requeridos'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `UPDATE EXAMEN SET 
+          registro_id_registro = :1, 
+          correlativo_id_correlativo = :2, 
+          registro_id_escuela = :3, 
+          registro_id_centro = :4,
+          registro_municipio_id_municipio = :5,
+          registro_municipio_departamento_id_departamento = :6
+         WHERE id_examen = :7`,
+        [registro_id_registro, correlativo_id_correlativo, registro_id_escuela, 
+         registro_id_centro, registro_municipio_id_municipio, 
+         registro_municipio_departamento_id_departamento, id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Examen no encontrado'
+        });
+      }
+
+      const updated = await executeQuery(
+        `SELECT E.*, 
+                R.nombre_completo AS evaluado_nombre,
+                C.fecha AS fecha_examen,
+                C.no_examen
+         FROM EXAMEN E
+         LEFT JOIN REGISTRO R ON E.registro_id_registro = R.id_registro
+         LEFT JOIN CORRELATIVO C ON E.correlativo_id_correlativo = C.id_correlativo
+         WHERE E.id_examen = :id`,
+        [id]
+      );
+
+      res.json({
+        success: true,
+        message: 'Examen actualizado exitosamente',
+        data: updated.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'examen');
+    }
+  }
+
+  async deleteExamen(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeNonQuery(
+        `DELETE FROM EXAMEN WHERE id_examen = :id`,
+        [id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Examen no encontrado'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Examen eliminado exitosamente'
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'examen');
+    }
+  }
+
+  // =====================================================================
+  // RESPUESTA_USUARIO - CRUD
+  // =====================================================================
+  
+  async getAllRespuestasUsuario(req, res) {
+    try {
+      const result = await executeQuery(`
+        SELECT RU.*, 
+               P.pregunta_texto,
+               P.respuesta_correcta,
+               CASE WHEN RU.respuesta = P.respuesta_correcta THEN 'CORRECTO' ELSE 'INCORRECTO' END AS resultado
+        FROM RESPUESTA_USUARIO RU
+        LEFT JOIN PREGUNTAS P ON RU.pregunta_id_pregunta = P.id_pregunta
+        ORDER BY RU.examen_id_examen, RU.pregunta_id_pregunta
+      `);
+      res.json({
+        success: true,
+        count: result.rows.length,
+        data: result.rows,
+        message: result.rows.length === 0 ? 'No hay respuestas de usuario' : undefined
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuestas de usuario');
+    }
+  }
+
+  async getRespuestaUsuarioById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeQuery(
+        `SELECT RU.*, 
+                P.pregunta_texto,
+                P.respuesta_correcta,
+                CASE WHEN RU.respuesta = P.respuesta_correcta THEN 'CORRECTO' ELSE 'INCORRECTO' END AS resultado
+         FROM RESPUESTA_USUARIO RU
+         LEFT JOIN PREGUNTAS P ON RU.pregunta_id_pregunta = P.id_pregunta
+         WHERE RU.id_respuesta_usuario = :id`,
+        [id]
+      );
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Respuesta de usuario no encontrada'
+        });
+      }
+      res.json({
+        success: true,
+        data: result.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuesta de usuario');
+    }
+  }
+
+  async createRespuestaUsuario(req, res) {
+    const { pregunta_id_pregunta, examen_id_examen, respuesta } = req.body;
+    
+    try {
+      if (!pregunta_id_pregunta || !examen_id_examen || !respuesta) {
+        return res.status(400).json({
+          success: false,
+          message: 'Todos los campos son requeridos (pregunta_id_pregunta, examen_id_examen, respuesta)'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `INSERT INTO RESPUESTA_USUARIO (pregunta_id_pregunta, examen_id_examen, respuesta) 
+         VALUES (:pregunta_id_pregunta, :examen_id_examen, :respuesta)`,
+        [pregunta_id_pregunta, examen_id_examen, respuesta]
+      );
+
+      const newRespuesta = await executeQuery(
+        `SELECT RU.*, 
+                P.pregunta_texto,
+                P.respuesta_correcta,
+                CASE WHEN RU.respuesta = P.respuesta_correcta THEN 'CORRECTO' ELSE 'INCORRECTO' END AS resultado
+         FROM RESPUESTA_USUARIO RU
+         LEFT JOIN PREGUNTAS P ON RU.pregunta_id_pregunta = P.id_pregunta
+         WHERE RU.pregunta_id_pregunta = :pregunta_id_pregunta 
+           AND RU.examen_id_examen = :examen_id_examen
+         ORDER BY RU.id_respuesta_usuario DESC`,
+        [pregunta_id_pregunta, examen_id_examen]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Respuesta de usuario creada exitosamente',
+        data: newRespuesta.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuesta de usuario');
+    }
+  }
+
+  async updateRespuestaUsuario(req, res) {
+    const { id } = req.params;
+    const { pregunta_id_pregunta, examen_id_examen, respuesta } = req.body;
+    
+    try {
+      if (!pregunta_id_pregunta || !examen_id_examen || !respuesta) {
+        return res.status(400).json({
+          success: false,
+          message: 'Todos los campos son requeridos (pregunta_id_pregunta, examen_id_examen, respuesta)'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `UPDATE RESPUESTA_USUARIO SET 
+          pregunta_id_pregunta = :pregunta_id_pregunta, 
+          examen_id_examen = :examen_id_examen, 
+          respuesta = :respuesta 
+         WHERE id_respuesta_usuario = :id`,
+        [pregunta_id_pregunta, examen_id_examen, respuesta, id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Respuesta de usuario no encontrada'
+        });
+      }
+
+      const updated = await executeQuery(
+        `SELECT RU.*, 
+                P.pregunta_texto,
+                P.respuesta_correcta,
+                CASE WHEN RU.respuesta = P.respuesta_correcta THEN 'CORRECTO' ELSE 'INCORRECTO' END AS resultado
+         FROM RESPUESTA_USUARIO RU
+         LEFT JOIN PREGUNTAS P ON RU.pregunta_id_pregunta = P.id_pregunta
+         WHERE RU.id_respuesta_usuario = :id`,
+        [id]
+      );
+
+      res.json({
+        success: true,
+        message: 'Respuesta de usuario actualizada exitosamente',
+        data: updated.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuesta de usuario');
+    }
+  }
+
+  async deleteRespuestaUsuario(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeNonQuery(
+        `DELETE FROM RESPUESTA_USUARIO WHERE id_respuesta_usuario = :id`,
+        [id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Respuesta de usuario no encontrada'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Respuesta de usuario eliminada exitosamente'
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuesta de usuario');
+    }
+  }
+
+  // =====================================================================
+  // RESPUESTA_PRACTICO_USUARIO - CRUD
+  // =====================================================================
+  
+  async getAllRespuestasPracticoUsuario(req, res) {
+    try {
+      const result = await executeQuery(`
+        SELECT RPU.*, 
+               PP.pregunta_texto,
+               PP.punteo AS punteo_maximo,
+               ROUND((RPU.nota / PP.punteo) * 100, 2) AS porcentaje
+        FROM RESPUESTA_PRACTICO_USUARIO RPU
+        LEFT JOIN PREGUNTAS_PRACTICO PP ON RPU.pregunta_practico_id_pregunta_practico = PP.id_pregunta_practico
+        ORDER BY RPU.examen_id_examen, RPU.pregunta_practico_id_pregunta_practico
+      `);
+      res.json({
+        success: true,
+        count: result.rows.length,
+        data: result.rows,
+        message: result.rows.length === 0 ? 'No hay respuestas prácticas de usuario' : undefined
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuestas prácticas de usuario');
+    }
+  }
+
+  async getRespuestaPracticoUsuarioById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeQuery(
+        `SELECT RPU.*, 
+                PP.pregunta_texto,
+                PP.punteo AS punteo_maximo,
+                ROUND((RPU.nota / PP.punteo) * 100, 2) AS porcentaje
+         FROM RESPUESTA_PRACTICO_USUARIO RPU
+         LEFT JOIN PREGUNTAS_PRACTICO PP ON RPU.pregunta_practico_id_pregunta_practico = PP.id_pregunta_practico
+         WHERE RPU.id_respuesta_practico_usuario = :id`,
+        [id]
+      );
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Respuesta práctica de usuario no encontrada'
+        });
+      }
+      res.json({
+        success: true,
+        data: result.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuesta práctica de usuario');
+    }
+  }
+
+  async createRespuestaPracticoUsuario(req, res) {
+    const { pregunta_practico_id_pregunta_practico, examen_id_examen, nota } = req.body;
+    
+    try {
+      if (!pregunta_practico_id_pregunta_practico || !examen_id_examen || nota === undefined) {
+        return res.status(400).json({
+          success: false,
+          message: 'Todos los campos son requeridos (pregunta_practico_id_pregunta_practico, examen_id_examen, nota)'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `INSERT INTO RESPUESTA_PRACTICO_USUARIO (pregunta_practico_id_pregunta_practico, examen_id_examen, nota) 
+         VALUES (:pregunta_practico_id_pregunta_practico, :examen_id_examen, :nota)`,
+        [pregunta_practico_id_pregunta_practico, examen_id_examen, nota]
+      );
+
+      const newRespuesta = await executeQuery(
+        `SELECT RPU.*, 
+                PP.pregunta_texto,
+                PP.punteo AS punteo_maximo,
+                ROUND((RPU.nota / PP.punteo) * 100, 2) AS porcentaje
+         FROM RESPUESTA_PRACTICO_USUARIO RPU
+         LEFT JOIN PREGUNTAS_PRACTICO PP ON RPU.pregunta_practico_id_pregunta_practico = PP.id_pregunta_practico
+         WHERE RPU.pregunta_practico_id_pregunta_practico = :pregunta_practico_id_pregunta_practico 
+           AND RPU.examen_id_examen = :examen_id_examen
+         ORDER BY RPU.id_respuesta_practico_usuario DESC`,
+        [pregunta_practico_id_pregunta_practico, examen_id_examen]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Respuesta práctica de usuario creada exitosamente',
+        data: newRespuesta.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuesta práctica de usuario');
+    }
+  }
+
+  async updateRespuestaPracticoUsuario(req, res) {
+    const { id } = req.params;
+    const { pregunta_practico_id_pregunta_practico, examen_id_examen, nota } = req.body;
+    
+    try {
+      if (!pregunta_practico_id_pregunta_practico || !examen_id_examen || nota === undefined) {
+        return res.status(400).json({
+          success: false,
+          message: 'Todos los campos son requeridos (pregunta_practico_id_pregunta_practico, examen_id_examen, nota)'
+        });
+      }
+
+      const result = await executeNonQuery(
+        `UPDATE RESPUESTA_PRACTICO_USUARIO SET 
+          pregunta_practico_id_pregunta_practico = :pregunta_practico_id_pregunta_practico, 
+          examen_id_examen = :examen_id_examen, 
+          nota = :nota 
+         WHERE id_respuesta_practico_usuario = :id`,
+        [pregunta_practico_id_pregunta_practico, examen_id_examen, nota, id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Respuesta práctica de usuario no encontrada'
+        });
+      }
+
+      const updated = await executeQuery(
+        `SELECT RPU.*, 
+                PP.pregunta_texto,
+                PP.punteo AS punteo_maximo,
+                ROUND((RPU.nota / PP.punteo) * 100, 2) AS porcentaje
+         FROM RESPUESTA_PRACTICO_USUARIO RPU
+         LEFT JOIN PREGUNTAS_PRACTICO PP ON RPU.pregunta_practico_id_pregunta_practico = PP.id_pregunta_practico
+         WHERE RPU.id_respuesta_practico_usuario = :id`,
+        [id]
+      );
+
+      res.json({
+        success: true,
+        message: 'Respuesta práctica de usuario actualizada exitosamente',
+        data: updated.rows[0]
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuesta práctica de usuario');
+    }
+  }
+
+  async deleteRespuestaPracticoUsuario(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await executeNonQuery(
+        `DELETE FROM RESPUESTA_PRACTICO_USUARIO WHERE id_respuesta_practico_usuario = :id`,
+        [id]
+      );
+
+      if (result.rowsAffected === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'Respuesta práctica de usuario no encontrada'
+        });
+      }
+
+      res.json({
+        success: true,
+        message: 'Respuesta práctica de usuario eliminada exitosamente'
+      });
+    } catch (error) {
+      handleDatabaseError(error, res, 'respuesta práctica de usuario');
+    }
+  }
 }
 
 module.exports = new CrudController();

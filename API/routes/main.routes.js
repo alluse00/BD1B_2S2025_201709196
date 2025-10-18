@@ -65,4 +65,49 @@ router.post('/preguntas-practico', mainController.createPreguntaPractico);
 router.put('/preguntas-practico/:id', mainController.updatePreguntaPractico);
 router.delete('/preguntas-practico/:id', mainController.deletePreguntaPractico);
 
+// =====================================================================
+// RUTAS REGISTRO
+// =====================================================================
+router.get('/registros', mainController.getAllRegistros);
+router.get('/registros/:id', mainController.getRegistroById);
+router.post('/registros', mainController.createRegistro);
+router.put('/registros/:id', mainController.updateRegistro);
+router.delete('/registros/:id', mainController.deleteRegistro);
+
+// =====================================================================
+// RUTAS CORRELATIVO
+// =====================================================================
+router.get('/correlativos', mainController.getAllCorrelativos);
+router.get('/correlativos/:id', mainController.getCorrelativoById);
+router.post('/correlativos', mainController.createCorrelativo);
+router.put('/correlativos/:id', mainController.updateCorrelativo);
+router.delete('/correlativos/:id', mainController.deleteCorrelativo);
+
+// =====================================================================
+// RUTAS EXAMEN
+// =====================================================================
+router.get('/examenes', mainController.getAllExamenes);
+router.get('/examenes/:id', mainController.getExamenById);
+router.post('/examenes', mainController.createExamen);
+router.put('/examenes/:id', mainController.updateExamen);
+router.delete('/examenes/:id', mainController.deleteExamen);
+
+// =====================================================================
+// RUTAS RESPUESTA_USUARIO
+// =====================================================================
+router.get('/respuestas-usuario', mainController.getAllRespuestasUsuario);
+router.get('/respuestas-usuario/:id', mainController.getRespuestaUsuarioById);
+router.post('/respuestas-usuario', mainController.createRespuestaUsuario);
+router.put('/respuestas-usuario/:id', mainController.updateRespuestaUsuario);
+router.delete('/respuestas-usuario/:id', mainController.deleteRespuestaUsuario);
+
+// =====================================================================
+// RUTAS RESPUESTA_PRACTICO_USUARIO
+// =====================================================================
+router.get('/respuestas-practico-usuario', mainController.getAllRespuestasPracticoUsuario);
+router.get('/respuestas-practico-usuario/:id', mainController.getRespuestaPracticoUsuarioById);
+router.post('/respuestas-practico-usuario', mainController.createRespuestaPracticoUsuario);
+router.put('/respuestas-practico-usuario/:id', mainController.updateRespuestaPracticoUsuario);
+router.delete('/respuestas-practico-usuario/:id', mainController.deleteRespuestaPracticoUsuario);
+
 module.exports = router;

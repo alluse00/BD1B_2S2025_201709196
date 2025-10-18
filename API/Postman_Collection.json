@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "bd1-201709196-collection",
 		"name": "BDD1 - Sistema Evaluaciones de Manejo - 201709196",
-		"description": "Colección completa de endpoints para el Sistema de Control de Evaluaciones de Centros de Manejo.\n\n**Proyecto Fase 2 - Bases de Datos 1**\n**Carnet:** 201709196\n**Base de datos:** Oracle XE 18.4.0\n\nIncluye:\n- 3 Consultas/Estadísticas\n- 7 Recursos CRUD (Departamentos, Municipios, Centros, Escuelas, Ubicaciones, Preguntas Teóricas, Preguntas Prácticas)",
+		"description": "Colección completa de endpoints para el Sistema de Control de Evaluaciones de Centros de Manejo.\n\n**Proyecto Fase 2 - Bases de Datos 1**\n**Carnet:** 201709196\n**Base de datos:** Oracle XE 18.4.0\n\nIncluye:\n- 3 Consultas/Estadísticas\n- 12 Recursos CRUD (Departamentos, Municipios, Centros, Escuelas, Ubicaciones, Preguntas Teóricas, Preguntas Prácticas, Registros, Correlativos, Exámenes, Respuestas Usuario, Respuestas Práctico Usuario)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -919,6 +919,616 @@
 				}
 			],
 			"description": "Operaciones CRUD para la tabla PREGUNTAS_PRACTICO (preguntas de evaluación práctica con punteo)."
+		},
+		{
+			"name": "CRUD - Registros",
+			"item": [
+				{
+					"name": "Listar Todos los Registros",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/registros",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"registros"
+							]
+						},
+						"description": "Obtiene todos los registros de evaluados con información relacionada de escuela, centro, municipio y departamento."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Registro por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/registros/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"registros",
+								"1"
+							]
+						},
+						"description": "Obtiene un registro específico por su ID con datos relacionados."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Registro",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ubicacion_escuela_id_escuela\": 1,\n    \"ubicacion_centro_id_centro\": 1,\n    \"municipio_id_municipio\": 1,\n    \"municipio_departamento_id_departamento\": 1,\n    \"fecha\": \"2024-01-15\",\n    \"tipo_tramite\": \"PRIMERA VEZ\",\n    \"tipo_licencia\": \"C\",\n    \"nombre_completo\": \"Juan Carlos Pérez López\",\n    \"genero\": \"M\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/registros",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"registros"
+							]
+						},
+						"description": "Crea un nuevo registro de evaluado.\n\n**Campos requeridos:**\n- ubicacion_escuela_id_escuela (number, FK)\n- ubicacion_centro_id_centro (number, FK)\n- municipio_id_municipio (number, FK)\n- municipio_departamento_id_departamento (number, FK)\n- fecha (string, formato: YYYY-MM-DD)\n- tipo_tramite (string)\n- tipo_licencia (string)\n- nombre_completo (string)\n- genero (string: M/F)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Registro",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ubicacion_escuela_id_escuela\": 1,\n    \"ubicacion_centro_id_centro\": 1,\n    \"municipio_id_municipio\": 1,\n    \"municipio_departamento_id_departamento\": 1,\n    \"fecha\": \"2024-01-15\",\n    \"tipo_tramite\": \"RENOVACION\",\n    \"tipo_licencia\": \"C\",\n    \"nombre_completo\": \"Juan Carlos Pérez López\",\n    \"genero\": \"M\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/registros/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"registros",
+								"1"
+							]
+						},
+						"description": "Actualiza un registro existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Registro",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/registros/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"registros",
+								"1"
+							]
+						},
+						"description": "Elimina un registro por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla REGISTRO (información de evaluados)."
+		},
+		{
+			"name": "CRUD - Correlativos",
+			"item": [
+				{
+					"name": "Listar Todos los Correlativos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/correlativos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"correlativos"
+							]
+						},
+						"description": "Obtiene todos los correlativos de exámenes ordenados por fecha descendente."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Correlativo por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/correlativos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"correlativos",
+								"1"
+							]
+						},
+						"description": "Obtiene un correlativo específico por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Correlativo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha\": \"2024-01-15\",\n    \"no_examen\": 1001\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/correlativos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"correlativos"
+							]
+						},
+						"description": "Crea un nuevo correlativo de examen.\n\n**Campos requeridos:**\n- fecha (string, formato: YYYY-MM-DD)\n- no_examen (number)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Correlativo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fecha\": \"2024-01-15\",\n    \"no_examen\": 1002\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/correlativos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"correlativos",
+								"1"
+							]
+						},
+						"description": "Actualiza un correlativo existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Correlativo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/correlativos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"correlativos",
+								"1"
+							]
+						},
+						"description": "Elimina un correlativo por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla CORRELATIVO (identificación única de exámenes)."
+		},
+		{
+			"name": "CRUD - Exámenes",
+			"item": [
+				{
+					"name": "Listar Todos los Exámenes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/examenes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"examenes"
+							]
+						},
+						"description": "Obtiene todos los exámenes con información del evaluado y correlativo."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Examen por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/examenes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"examenes",
+								"1"
+							]
+						},
+						"description": "Obtiene un examen específico por su ID con datos relacionados."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Examen",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"registro_id_registro\": 1,\n    \"correlativo_id_correlativo\": 1,\n    \"registro_id_escuela\": 1,\n    \"registro_id_centro\": 1,\n    \"registro_municipio_id_municipio\": 1,\n    \"registro_municipio_departamento_id_departamento\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/examenes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"examenes"
+							]
+						},
+						"description": "Crea un nuevo examen.\n\n**Campos requeridos:**\n- registro_id_registro (number, FK)\n- correlativo_id_correlativo (number, FK)\n- registro_id_escuela (number, FK)\n- registro_id_centro (number, FK)\n- registro_municipio_id_municipio (number, FK)\n- registro_municipio_departamento_id_departamento (number, FK)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Examen",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"registro_id_registro\": 1,\n    \"correlativo_id_correlativo\": 1,\n    \"registro_id_escuela\": 1,\n    \"registro_id_centro\": 1,\n    \"registro_municipio_id_municipio\": 1,\n    \"registro_municipio_departamento_id_departamento\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/examenes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"examenes",
+								"1"
+							]
+						},
+						"description": "Actualiza un examen existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Examen",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/examenes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"examenes",
+								"1"
+							]
+						},
+						"description": "Elimina un examen por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla EXAMEN (exámenes realizados por evaluados)."
+		},
+		{
+			"name": "CRUD - Respuestas Usuario",
+			"item": [
+				{
+					"name": "Listar Todas las Respuestas Usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-usuario",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-usuario"
+							]
+						},
+						"description": "Obtiene todas las respuestas del examen teórico con validación de correctitud."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Respuesta Usuario por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-usuario/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-usuario",
+								"1"
+							]
+						},
+						"description": "Obtiene una respuesta específica con el resultado CORRECTO/INCORRECTO."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Respuesta Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pregunta_id_pregunta\": 1,\n    \"examen_id_examen\": 1,\n    \"respuesta\": \"A\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-usuario",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-usuario"
+							]
+						},
+						"description": "Registra la respuesta de un evaluado a una pregunta teórica.\n\n**Campos requeridos:**\n- pregunta_id_pregunta (number, FK)\n- examen_id_examen (number, FK)\n- respuesta (string: A, B, C o D)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Respuesta Usuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pregunta_id_pregunta\": 1,\n    \"examen_id_examen\": 1,\n    \"respuesta\": \"B\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-usuario/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-usuario",
+								"1"
+							]
+						},
+						"description": "Actualiza una respuesta de usuario existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Respuesta Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-usuario/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-usuario",
+								"1"
+							]
+						},
+						"description": "Elimina una respuesta de usuario por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla RESPUESTA_USUARIO (respuestas del examen teórico)."
+		},
+		{
+			"name": "CRUD - Respuestas Práctico Usuario",
+			"item": [
+				{
+					"name": "Listar Todas las Respuestas Práctico Usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-practico-usuario",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-practico-usuario"
+							]
+						},
+						"description": "Obtiene todas las respuestas del examen práctico con cálculo de porcentaje."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Respuesta Práctico Usuario por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-practico-usuario/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-practico-usuario",
+								"1"
+							]
+						},
+						"description": "Obtiene una respuesta práctica específica con porcentaje obtenido."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Respuesta Práctico Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pregunta_practico_id_pregunta_practico\": 1,\n    \"examen_id_examen\": 1,\n    \"nota\": 18\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-practico-usuario",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-practico-usuario"
+							]
+						},
+						"description": "Registra la nota de un evaluado en una pregunta práctica.\n\n**Campos requeridos:**\n- pregunta_practico_id_pregunta_practico (number, FK)\n- examen_id_examen (number, FK)\n- nota (number, entre 0 y punteo máximo)"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Respuesta Práctico Usuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pregunta_practico_id_pregunta_practico\": 1,\n    \"examen_id_examen\": 1,\n    \"nota\": 20\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-practico-usuario/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-practico-usuario",
+								"1"
+							]
+						},
+						"description": "Actualiza una respuesta práctica de usuario existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Respuesta Práctico Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/respuestas-practico-usuario/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"respuestas-practico-usuario",
+								"1"
+							]
+						},
+						"description": "Elimina una respuesta práctica de usuario por su ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Operaciones CRUD para la tabla RESPUESTA_PRACTICO_USUARIO (calificaciones del examen práctico)."
 		},
 		{
 			"name": "Endpoints Informativos",

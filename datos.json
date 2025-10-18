@@ -137,7 +137,7 @@
         },
         {
             "ubicacion_escuela_id_escuela": 2,
-            "ubicacion_centro_id_centro": 2,
+            "ubicacion_centro_id_centro": 1,
             "municipio_id_municipio": 5,
             "municipio_departamento_id_departamento": 2,
             "fecha": "2025-01-18",
@@ -203,10 +203,10 @@
             "registro_municipio_departamento_id_departamento": 3
         },
         {
-            "registro_id_registro": 5,
+            "registro_id_registro": 6,
             "correlativo_id_correlativo": 5,
             "registro_id_escuela": 2,
-            "registro_id_centro": 2,
+            "registro_id_centro": 1,
             "registro_municipio_id_municipio": 5,
             "registro_municipio_departamento_id_departamento": 2
         }

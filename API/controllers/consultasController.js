@@ -10,28 +10,50 @@ class ConsultasController {
     
     try {
       let query = `
+        WITH estadisticas_preguntas AS (
+          SELECT 
+            P.id_pregunta,
+            P.pregunta_texto,
+            P.respuesta_correcta,
+            P.respuesta_a,
+            P.respuesta_b,
+            P.respuesta_c,
+            P.respuesta_d,
+            COUNT(RU.respuesta) AS total_respuestas,
+            SUM(CASE WHEN RU.respuesta = P.respuesta_correcta THEN 1 ELSE 0 END) AS total_aciertos,
+            SUM(CASE WHEN RU.respuesta = 'A' THEN 1 ELSE 0 END) AS veces_seleccionada_a,
+            SUM(CASE WHEN RU.respuesta = 'B' THEN 1 ELSE 0 END) AS veces_seleccionada_b,
+            SUM(CASE WHEN RU.respuesta = 'C' THEN 1 ELSE 0 END) AS veces_seleccionada_c,
+            SUM(CASE WHEN RU.respuesta = 'D' THEN 1 ELSE 0 END) AS veces_seleccionada_d
+          FROM PREGUNTAS P
+          LEFT JOIN RESPUESTA_USUARIO RU ON P.id_pregunta = RU.pregunta_id_pregunta
+          GROUP BY P.id_pregunta, P.pregunta_texto, P.respuesta_correcta, 
+                   P.respuesta_a, P.respuesta_b, P.respuesta_c, P.respuesta_d
+        )
         SELECT 
-          id_pregunta,
-          pregunta_texto,
-          respuesta_correcta,
-          respuesta_a,
-          respuesta_b,
-          respuesta_c,
-          respuesta_d,
-          total_respuestas,
-          total_aciertos,
-          porcentaje_aciertos,
-          veces_seleccionada_a,
-          veces_seleccionada_b,
-          veces_seleccionada_c,
-          veces_seleccionada_d,
-          CASE 
-            WHEN porcentaje_aciertos < 30 THEN 'REVISION URGENTE'
-            WHEN porcentaje_aciertos BETWEEN 30 AND 50 THEN 'REVISAR'
-            WHEN porcentaje_aciertos BETWEEN 50 AND 70 THEN 'ACEPTABLE'
-            ELSE 'OK'
-          END AS estado_recomendacion
-        FROM V_PREGUNTAS_MENOR_ACIERTOS
+          id_pregunta AS ID_PREGUNTA,
+          pregunta_texto AS PREGUNTA_TEXTO,
+          respuesta_correcta AS RESPUESTA_CORRECTA,
+          respuesta_a AS RESPUESTA_A,
+          respuesta_b AS RESPUESTA_B,
+          respuesta_c AS RESPUESTA_C,
+          respuesta_d AS RESPUESTA_D,
+          total_respuestas AS TOTAL_RESPUESTAS,
+          total_aciertos AS TOTAL_ACIERTOS,
+          ROUND(
+            CASE 
+              WHEN total_respuestas > 0 
+              THEN (total_aciertos * 100.0 / total_respuestas)
+              ELSE 0 
+            END, 
+            2
+          ) AS PORCENTAJE_ACIERTOS,
+          veces_seleccionada_a AS VECES_SELECCIONADA_A,
+          veces_seleccionada_b AS VECES_SELECCIONADA_B,
+          veces_seleccionada_c AS VECES_SELECCIONADA_C,
+          veces_seleccionada_d AS VECES_SELECCIONADA_D
+        FROM estadisticas_preguntas
+        ORDER BY PORCENTAJE_ACIERTOS ASC, TOTAL_RESPUESTAS DESC
       `;
       
       const params = [];
@@ -43,7 +65,7 @@ class ConsultasController {
       
       const result = await executeQuery(query, params);
       
-      // Formatear respuesta para que sea compatible con el formato anterior
+      // Formatear respuesta
       const preguntasFormateadas = result.rows.map(pregunta => ({
         ID_PREGUNTA: pregunta.ID_PREGUNTA,
         TEXTO_PREGUNTA: pregunta.PREGUNTA_TEXTO,
@@ -52,7 +74,10 @@ class ConsultasController {
         TOTAL_ACIERTOS: pregunta.TOTAL_ACIERTOS,
         TOTAL_ERRORES: pregunta.TOTAL_RESPUESTAS - pregunta.TOTAL_ACIERTOS,
         PORCENTAJE_ACIERTOS: pregunta.PORCENTAJE_ACIERTOS,
-        ESTADO_RECOMENDACION: pregunta.ESTADO_RECOMENDACION,
+        ESTADO_RECOMENDACION: 
+          pregunta.PORCENTAJE_ACIERTOS < 30 ? 'REVISION URGENTE' :
+          pregunta.PORCENTAJE_ACIERTOS < 50 ? 'REVISAR' :
+          pregunta.PORCENTAJE_ACIERTOS < 70 ? 'ACEPTABLE' : 'OK',
         OPCIONES: {
           A: {
             texto: pregunta.RESPUESTA_A,

@@ -5,6 +5,12 @@
 -- Carnet: 201709196
 -- ===============================================================
 
+-- Conectar al Pluggable Database (XEPDB1)
+ALTER SESSION SET CONTAINER = XEPDB1;
+
+-- Cambiar al esquema SYSTEM
+ALTER SESSION SET CURRENT_SCHEMA = SYSTEM;
+
 -- =====================================================================
 -- LIMPIEZA DE BASE DE DATOS (en orden por dependencias)
 -- =====================================================================
@@ -214,3 +220,7 @@ COMMENT ON TABLE RESPUESTA_PRACTICO_USUARIO IS 'Respuestas prácticas de evaluad
 SELECT 'Base de datos creada exitosamente!' AS MENSAJE FROM DUAL;
 SELECT '12 Tablas creadas' AS INFO FROM DUAL;
 SELECT 'Compatible con datos.json' AS SISTEMA FROM DUAL;
+
+-- Confirmar cambios y salir
+COMMIT;
+EXIT;

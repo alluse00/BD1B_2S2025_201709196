@@ -11,10 +11,17 @@ services:
       - ORACLE_CHARACTERSET=AL32UTF8
       - ORACLE_ALLOW_REMOTE=true
     volumes:
-      # Monta el archivo DDL.sql directamente dentro de la carpeta de inicialización
-      - ./DDL.sql:/docker-entrypoint-initdb.d/DDL.sql:ro
+      # Monta el script DDL.sql en la carpeta de inicialización automática
+      # La imagen gvenzl/oracle-xe ejecuta automáticamente los scripts en /container-entrypoint-initdb.d/
+      - ./DDL.sql:/container-entrypoint-initdb.d/01_DDL.sql:ro
       # Crea un volumen persistente para los datos
       - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
 
 volumes:
   oracle-data:
